@@ -8,3 +8,9 @@ This repository has some scripts to manually test network policy with conformanc
 # to delete created docker container
 ./clean-docker.sh aks-for-conformance.config
 ```
+
+2. To build V2 NPM image, refer to this [npm-linux-image-building-shortcut](https://github.com/JungukCho/azure-container-networking/tree/npm-linux-image-building-shortcut) branch. It has a hacky way to build image fast.
+```shell
+# npm root dir
+docker build -t azure-npm-image -f ./npm/Dockerfile .
+```
