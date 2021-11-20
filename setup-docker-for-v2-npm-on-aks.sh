@@ -63,10 +63,12 @@ DOCKER_NAME=${NEW_DOCKER_NAME}
 
 # 2. start docker and create shared directory between host and docker container.
 SHARED_DIR="/root/shared"
-mkdir -p $(pwd)/shared
 docker run -it -d -v $(pwd)/scripts:${SHARED_DIR} --name ${DOCKER_NAME} ${DOCKER_IMAGE} 
 
+# copy util scripts
 docker exec ${DOCKER_NAME} mkdir -p ${CONFORMANCE_TEST_DIR}
+docker exec ${DOCKER_NAME} mkdir -p ${CONFORMANCE_TEST_DIR}/utils
+docker cp $(pwd)/utils/. ${DOCKER_NAME}:$CONFORMANCE_TEST_DIR/utils/
 
 
 # 3. Setup conformance test
@@ -90,13 +92,7 @@ EOF
 sed -i "s/FQDN_INFORMATION/${FQDN}/" $(pwd)/${NPM_TEST}
 docker cp ${NPM_TEST} ${DOCKER_NAME}:$CONFORMANCE_TEST_DIR
 docker exec ${DOCKER_NAME} chmod +x $CONFORMANCE_TEST_DIR/${NPM_TEST} 
-
 rm ${NPM_TEST}
-
-
-## copy tail-npm-log.sh script
-NPM_LOG_PRINT_HELPER="tail-npm-log.sh"
-docker cp ${NPM_LOG_PRINT_HELPER} ${DOCKER_NAME}:$CONFORMANCE_TEST_DIR
 
 
 ## 3.2 create config and copy it into docker
